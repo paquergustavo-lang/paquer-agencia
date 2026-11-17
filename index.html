@@ -503,7 +503,6 @@ function setLang(l){
   document.getElementById('bpt').classList.toggle('on', l==='pt');
   document.getElementById('ben').classList.toggle('on', l==='en');
   document.querySelectorAll('.wa-link').forEach(a => a.href = waUrl());
-  setCur(l==='en' ? 'usd' : 'brl');
   const shown = WHATSAPP.replace(/^55(\d{2})(\d{5})(\d{4})$/, "+55 ($1) $2-$3");
   document.getElementById('wa-text').textContent = "WhatsApp: " + shown;
 }
@@ -512,9 +511,25 @@ function setCur(c){
   document.getElementById('cbrl').classList.toggle('on', c==='brl');
   document.getElementById('cusd').classList.toggle('on', c==='usd');
 }
-let start = 'pt';
-try { if (location.hash === '#en') start = 'en'; } catch(e) {}
-setLang(start);
+// Idioma e moeda iniciais: 1) parâmetros do link (?lang=pt|en&cur=brl|usd), 2) #en, 3) idioma do aparelho e fuso horário
+(function(){
+  let qs = {};
+  try { qs = Object.fromEntries(new URLSearchParams(location.search)); } catch(e) {}
+  let l = qs.lang, c = qs.cur;
+  try { if (!l && location.hash === '#en') l = 'en'; } catch(e) {}
+  if (l !== 'pt' && l !== 'en') {
+    const langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'pt'];
+    l = String(langs[0]).toLowerCase().startsWith('pt') ? 'pt' : 'en';
+  }
+  if (c !== 'brl' && c !== 'usd') {
+    let tz = '';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch(e) {}
+    const br = ['Sao_Paulo','Cuiaba','Campo_Grande','Manaus','Bahia','Fortaleza','Recife','Belem','Maceio','Araguaina','Porto_Velho','Boa_Vista','Rio_Branco','Santarem','Noronha','Eirunepe'];
+    c = br.some(z => tz === 'America/' + z) ? 'brl' : (tz ? 'usd' : (l === 'pt' ? 'brl' : 'usd'));
+  }
+  setLang(l);
+  setCur(c);
+})();
 </script>
 </body>
 </html>
