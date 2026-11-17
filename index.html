@@ -4,7 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paquer — Mais clientes no seu WhatsApp</title>
-<!-- META PIXEL: cole aqui o código do Pixel do Meta -->
+<!-- Meta Pixel: Paquer Agência – site -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1071931279194909');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1071931279194909&ev=PageView&noscript=1"/></noscript>
+<!-- Fim Meta Pixel -->
 <!-- GOOGLE ANALYTICS: cole aqui a tag do GA4 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -530,6 +541,12 @@ function setCur(c){
   setLang(l);
   setCur(c);
 })();
+
+document.addEventListener('click', function(e){
+  const a = e.target.closest && e.target.closest('.wa-link');
+  if (!a) return;
+  try { if (window.fbq) fbq('track', 'Contact', {content_name: 'WhatsApp', content_category: lang + '-' + (document.getElementById('plans-root').getAttribute('data-cur'))}); } catch(err) {}
+});
 </script>
 </body>
 </html>
